@@ -54,8 +54,10 @@ class webServerHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 output = ""
                 output += "<html><body>"
+                output = "<a href='/restaurants/new'>Make a New Restaurant Here</a>"
                 for restaurant in restaurants:
-                    output += restaurant.name
+                    output += restaurant.name 
+                    output +="</br>"
                     output += "<a href=#>edit</a></br>"
                     output += "<a href=#>delete</a>"
                     output += "</br></br></br>"
@@ -63,6 +65,19 @@ class webServerHandler(BaseHTTPRequestHandler):
                 self.wfile.write(output)
                 return
 
+            
+            if self.path.endswith("/restaurants/new"):
+                restaurants = session.query(Restaurant).all()
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                output = ""
+                output += "<html><body>"
+                output += "<h2>Make a New Restaurant</h2>"
+                output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><input name="message" type="text" ><input type="submit" value="Create"> </form>'''
+                output += "</body></html>"
+                self.wfile.write(output)
+                return
         except IOError:
             self.send_error(404, 'File Not Found: %s' % self.path)
 
